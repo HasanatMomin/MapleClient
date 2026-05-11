@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.maple.launcher.ui.SettingsController" spacing="15" styleClass="page">
+    <Label text="Launcher Settings" styleClass="page-title"/>
+    <VBox styleClass="card" spacing="10"><Label text="Theme"/><ComboBox fx:id="themeBox" styleClass="input"/></VBox>
+</VBox>

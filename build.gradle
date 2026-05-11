@@ -1,0 +1,45 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'com.gradleup.shadow' version '8.3.0'
+    id 'edu.sc.seis.launch4j' version '3.0.5'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://libraries.minecraft.net/' }
+}
+
+dependencies {
+    implementation 'com.github.Litarvan:OpenAuth:master-SNAPSHOT'
+    implementation 'com.github.Litarvan:OpenLauncherLib:master-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing', 'javafx.graphics' ]
+}
+
+application {
+    mainClass = 'com.maple.launcher.RunLauncher'
+}
+
+shadowJar {
+    archiveBaseName.set('MapleLauncher')
+    archiveClassifier.set('')
+    archiveVersion.set('1.0')
+    mergeServiceFiles()
+}
+
+launch4j {
+    mainClassName = 'com.maple.launcher.RunLauncher'
+    icon = ''
+    outfile = 'MapleLauncher.exe'
+    headerType = 'gui'
+    jarTask = project.tasks.shadowJar
+    errTitle = 'Maple Launcher Error'
+    downloadUrl = 'https://adoptium.net/'
+    jreMinVersion = '21'
+}

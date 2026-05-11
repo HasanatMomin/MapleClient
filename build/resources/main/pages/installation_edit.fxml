@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.maple.launcher.ui.InstallationEditController" spacing="15" styleClass="page">
+    <HBox>
+        <Label text="Edit Installation" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Cancel" onAction="#onClose" styleClass="btn-secondary"/>
+        <Button text="Save" onAction="#onSave" styleClass="btn-primary"/>
+    </HBox>
+
+    <VBox styleClass="card" spacing="10">
+        <Label text="Name"/>
+        <TextField fx:id="nameField" styleClass="input"/>
+
+        <Label text="Type"/>
+        <ComboBox fx:id="typeBox" styleClass="input"/>
+
+        <Label fx:id="mcVersionLabel" text="Minecraft Version"/>
+        <ComboBox fx:id="versionBox" styleClass="input"/>
+
+        <!-- FABRIC LOADER -->
+        <VBox fx:id="fabricLoaderBox" spacing="6" visible="false" managed="false">
+            <Label text="Fabric Loader Version"/>
+            <ComboBox fx:id="loaderBox" styleClass="input"/>
+            <Label fx:id="loaderInfoLabel" text="" styleClass="muted"/>
+        </VBox>
+    </VBox>
+
+    <VBox styleClass="card" spacing="10">
+        <Label text="RAM (GB)"/>
+        <Spinner fx:id="ramSpinner" styleClass="input"/>
+
+        <Label text="Java Runtime"/>
+        <HBox spacing="10">
+            <ComboBox fx:id="javaBox" HBox.hgrow="ALWAYS" styleClass="input"/>
+            <Button text="Browse" onAction="#onBrowseJava" styleClass="btn-secondary"/>
+        </HBox>
+
+        <CheckBox fx:id="keepOpenBox" text="Keep Launcher Open" styleClass="checkbox"/>
+    </VBox>
+</VBox>
