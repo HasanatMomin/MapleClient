@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Changed from ubuntu-latest to windows-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Code
@@ -21,7 +21,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build Shadow JAR & Launch4j EXE
-        run: gradlew.bat shadowJar createExe --no-daemon
+        run: ./gradlew.bat shadowJar createExe --no-daemon
 
       - name: Create Release & Upload Executables
         uses: softprops/action-gh-release@v2
