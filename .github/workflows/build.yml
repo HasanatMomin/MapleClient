@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Changed from ubuntu-latest to windows-latest
 
     steps:
       - name: Checkout Code
@@ -20,11 +20,8 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Make Gradle Wrapper Executable
-        run: chmod +x gradlew
-
       - name: Build Shadow JAR & Launch4j EXE
-        run: ./gradlew shadowJar createExe --no-daemon
+        run: gradlew.bat shadowJar createExe --no-daemon
 
       - name: Create Release & Upload Executables
         uses: softprops/action-gh-release@v2
