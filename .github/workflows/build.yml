@@ -3,8 +3,6 @@ name: Build MapleLauncher Executable
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -25,12 +23,16 @@ jobs:
       - name: Make Gradle Wrapper Executable
         run: chmod +x gradlew
 
-      - name: Build Shadow JAR
-        run: ./gradlew shadowJar --no-daemon
+      - name: Build Shadow JAR & Launch4j EXE
+        run: ./gradlew shadowJar createExe --no-daemon
 
-      - name: Upload Built Executable JAR
-        uses: actions/upload-artifact@v4
+      - name: Create Release & Upload Executables
+        uses: softprops/action-gh-release@v2
         with:
-          name: MapleLauncher-JAR
-          path: build/libs/MapleLauncher-1.0.jar
-          retention-days: 7
+          tag_name: "v1.0-${{ github.run_number }}"
+          name: "MapleLauncher v1.0 (Build ${{ github.run_number }})"
+          files: |
+            build/libs/MapleLauncher-1.0.jar
+            build/launch4j/MapleLauncher.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
