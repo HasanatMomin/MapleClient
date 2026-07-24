@@ -1,4 +1,4 @@
-name: Build MapleLauncher Executable & Release
+name: Build Portable MapleLauncher Executable
 
 on:
   push:
@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: chmod +x gradlew
 
-      - name: Build Fat JAR, Launch4j EXE, and jpackage Installer with Dynamic Version
-        run: ./gradlew.bat build createExe jpackage "-Pversion=${{ steps.semver.outputs.VERSION }}" --no-daemon
+      - name: Build Fat JAR and Portable EXE
+        run: ./gradlew.bat build createExe "-Pversion=${{ steps.semver.outputs.VERSION }}" --no-daemon
 
       # Upload Artifacts
       - name: Upload Build Artifacts
@@ -50,25 +50,23 @@ jobs:
         with:
           name: MapleLauncher-v${{ steps.semver.outputs.VERSION }}
           path: |
-            build/libs/MapleLauncher.jar
             build/launch4j/MapleLauncher.exe
-            build/dist/*.exe
+            build/libs/MapleLauncher.jar
             Launch.bat
           retention-days: 30
 
       # Create Release on GitHub
-      - name: Create Release & Upload Executables
+      - name: Create Release & Upload Executable
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ steps.semver.outputs.VERSION }}"
           name: "MapleLauncher v${{ steps.semver.outputs.VERSION }} by Maplized (Hasanat)"
-          body: "Official release v${{ steps.semver.outputs.VERSION }} built by Maplized (Hasanat)."
+          body: "Official portable release v${{ steps.semver.outputs.VERSION }} built by Maplized (Hasanat)."
           draft: false
           prerelease: false
           files: |
-            build/libs/MapleLauncher.jar
             build/launch4j/MapleLauncher.exe
-            build/dist/*.exe
+            build/libs/MapleLauncher.jar
             Launch.bat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
