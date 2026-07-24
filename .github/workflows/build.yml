@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: chmod +x gradlew
 
-      - name: Build Fat JAR, Launch4j EXE, and jpackage Installer
-        run: ./gradlew.bat build createExe jpackage --no-daemon
+      - name: Build Fat JAR, Launch4j EXE, and jpackage Installer with Dynamic Version
+        run: ./gradlew.bat build createExe jpackage -Pversion=${{ steps.semver.outputs.VERSION }} --no-daemon
 
       # Upload Artifacts
       - name: Upload Build Artifacts
@@ -61,7 +61,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ steps.semver.outputs.VERSION }}"
-          name: "MapleLauncher v${{ steps.semver.outputs.VERSION }}"
+          name: "MapleLauncher v${{ steps.semver.outputs.VERSION }} by Maplized (Hasanat)"
+          body: "Official release v${{ steps.semver.outputs.VERSION }} built by Maplized (Hasanat)."
           draft: false
           prerelease: false
           files: |
