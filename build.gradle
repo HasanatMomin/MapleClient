@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'edu.sc.seis.launch4j' version '4.0.0'
+    id 'org.panteleyev.jpackageplugin' version '1.6.0'
 }
 
 group = 'com.maple'
@@ -26,7 +26,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 
-// JavaFX setup - keeping only necessary modules for lightweight output
 javafx {
     version = "21"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
@@ -36,7 +35,7 @@ application {
     mainClass = 'com.maple.launcher.RunLauncher'
 }
 
-// Built-in Gradle Fat JAR task (packages all runtime dependencies into the JAR)
+// Built-in Gradle Fat JAR task
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
@@ -47,11 +46,18 @@ jar {
     }
 }
 
-launch4j {
-    mainClassName = 'com.maple.launcher.RunLauncher'
-    outputDir = 'launch4j'
-    outfile = 'MapleLauncher.exe'
-    headerType = 'gui'
-    requires64Bit = true
-    jreMinVersion = '21'
+// jpackage task configuration
+jpackage {
+    appName = 'MapleLauncher'
+    appVersion = '1.0.0'
+    vendor = 'Maple'
+    mainJar = "${project.name}-${project.version}.jar"
+    mainClass = application.mainClass.get()
+    input = "${buildDir}/libs"
+    destination = "${buildDir}/dist"
+    type = 'EXE' // Generates a standalone installer (.exe)
+    
+    // Windows specific configuration
+    winMenu = true
+    winShortcut = true
 }
