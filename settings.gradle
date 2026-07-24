@@ -1,6 +1,0 @@
-plugins {
-    // Automatically resolves and downloads JDKs (Java 21) from the Foojay Disco API
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
-}
-
-rootProject.name = 'MapleLauncher'
