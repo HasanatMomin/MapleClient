@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.maple.launcher.ui.InstallationsController" spacing="15" styleClass="page">
+    <HBox spacing="10"><Label text="Installation Manager" styleClass="page-title"/><Region HBox.hgrow="ALWAYS"/><Button text="Create" onAction="#onCreate" styleClass="btn-primary"/><Button fx:id="dupBtn" text="Duplicate" onAction="#onDuplicate" styleClass="btn-secondary"/><Button fx:id="editBtn" text="Edit" onAction="#onEdit" styleClass="btn-secondary"/><Button fx:id="delBtn" text="Delete" onAction="#onDelete" styleClass="btn-danger"/></HBox>
+    <ListView fx:id="list" VBox.vgrow="ALWAYS" styleClass="list"/>
+</VBox>

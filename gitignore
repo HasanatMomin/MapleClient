@@ -1,0 +1,23 @@
+# Gradle temporary files
+.gradle/
+build/
+
+# Java/JDK 21+ 
+*.class
+*.jar
+*.war
+*.ear
+bin/
+
+# IDE specific (IntelliJ, VS Code, etc.)
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS generated files
+Thumbs.db
+desktop.ini
+.DS_Store

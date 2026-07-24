@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'edu.sc.seis.launch4j' version '4.0.0'
+}
+
+group = 'com.maple'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://libraries.minecraft.net/' }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation 'com.github.Litarvan:OpenAuth:master-SNAPSHOT'
+    implementation 'com.github.Litarvan:OpenLauncherLib:master-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+// JavaFX setup - keeping only necessary modules for lightweight output
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
+}
+
+application {
+    mainClass = 'com.maple.launcher.RunLauncher'
+}
+
+// Built-in Gradle Fat JAR task (packages all runtime dependencies into the JAR)
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': application.mainClass.get()
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+launch4j {
+    mainClassName = 'com.maple.launcher.RunLauncher'
+    outputDir = 'launch4j'
+    outfile = 'MapleLauncher.exe'
+    headerType = 'gui'
+    requires64Bit = true
+    jreMinVersion = '21'
+}

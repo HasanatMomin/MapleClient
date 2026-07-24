@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.maple.launcher.ui.RootController"
+            prefWidth="1100" prefHeight="680" styleClass="root">
+    <left>
+        <VBox prefWidth="290" spacing="15" styleClass="nav">
+            <HBox spacing="10" styleClass="nav-profile">
+                <Label text="M" styleClass="avatar-text"/>
+                <VBox>
+                    <Label text="Logged in as" styleClass="muted"/>
+                    <Label fx:id="usernameLabel" text="Not logged in" styleClass="nav-username"/>
+                </VBox>
+            </HBox>
+
+            <Button text="Accounts" onAction="#openAccounts" styleClass="nav-btn" maxWidth="Infinity"/>
+            <Button text="Installations" onAction="#openInstallationsPage" styleClass="nav-btn" maxWidth="Infinity"/>
+            <Button text="Settings" onAction="#openSettings" styleClass="nav-btn" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox spacing="10" styleClass="playbar">
+                <Label fx:id="selectedInstallLabel" text="-" styleClass="playbar-title"/>
+                <HBox spacing="10">
+                    <Button fx:id="playButton" text="PLAY" onAction="#onPlay" styleClass="btn-play"/>
+                    <ProgressBar fx:id="progressBar" progress="0.0" HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <Label fx:id="statusLabel" text="Status: Ready" styleClass="muted"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentHost" styleClass="content"/>
+    </center>
+</BorderPane>
