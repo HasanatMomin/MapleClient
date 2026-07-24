@@ -1,9 +1,12 @@
 @echo off
-title MapleLauncher Debug Runner
-echo Launching MapleLauncher...
-java -jar build/libs/MapleLauncher.jar
-if %ERRORLEVEL% NEQ 0 (
+title Maple Launcher
+java -jar MapleLauncher-1.0.jar
+if %errorlevel% neq 0 (
     echo.
-    echo [ERROR] Application closed with an error code: %ERRORLEVEL%
+    echo ----------------------------------------------------
+    echo [ERROR] Failed to start Maple Launcher.
+    echo Please make sure Java 21 or newer is installed!
+    echo Download Java: https://adoptium.net/
+    echo ----------------------------------------------------
     pause
 )
