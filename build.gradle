@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.maple'
-version = project.hasProperty('version') && project.version != 'unspecified' ? project.version : '1.0.0'
+version = '1.0'
 
 repositories {
     mavenCentral()
@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 
+// JavaFX setup - keeping only necessary modules for lightweight output
 javafx {
     version = "21"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
@@ -35,28 +36,17 @@ application {
     mainClass = 'com.maple.launcher.RunLauncher'
 }
 
-// Runnable Fat JAR build
+// Built-in Gradle Fat JAR task (packages all runtime dependencies into the JAR)
 jar {
-    archiveFileName = 'MapleLauncher.jar'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes(
-            'Main-Class': application.mainClass.get(),
-            'Implementation-Vendor': 'Maplized (Hasanat)',
-            'Implementation-Version': project.version.toString()
-        )
+        attributes 'Main-Class': application.mainClass.get()
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
-// 4-digit Windows version string (1.3.4.0) for Launch4j
-def winVersion = project.version.toString().contains('.') && project.version.toString().split('\\.').size() == 3 
-    ? "${project.version}.0" 
-    : "${project.version}"
-
-// Portable .EXE Configuration
 launch4j {
     mainClassName = 'com.maple.launcher.RunLauncher'
     outputDir = 'launch4j'
@@ -64,28 +54,4 @@ launch4j {
     headerType = 'gui'
     requires64Bit = true
     jreMinVersion = '21'
-    icon = "${projectDir}/icon.ico"
-    companyName = 'Maplized (Hasanat)'
-    copyright = 'Maplized (Hasanat)'
-    version = winVersion
-    textVersion = project.version.toString()
 }
-
-// Automatically generate Launch.bat for releases
-tasks.register('generateLaunchBat') {
-    doLast {
-        def batFile = file("${buildDir}/Launch.bat")
-        batFile.text = """@echo off
-title MapleLauncher Debug Runner
-echo Starting MapleLauncher...
-java -jar MapleLauncher.jar
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo [ERROR] Launcher closed with code: %ERRORLEVEL%
-    pause
-)
-"""
-    }
-}
-
-build.finalizedBy(generateLaunchBat)
