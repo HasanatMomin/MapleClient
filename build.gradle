@@ -3,11 +3,9 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'edu.sc.seis.launch4j' version '4.0.0'
-    id 'org.panteleyev.jpackageplugin' version '1.6.0'
 }
 
 group = 'com.maple'
-// Fallback version if not passed via command line
 version = project.hasProperty('version') && project.version != 'unspecified' ? project.version : '1.0.0'
 
 repositories {
@@ -53,12 +51,12 @@ jar {
     }
 }
 
-// Format semver (1.3.3) into 4-digit Windows format (1.3.3.0) for Launch4j
+// 4-digit Windows version string (1.3.4.0)
 def winVersion = project.version.toString().contains('.') && project.version.toString().split('\\.').size() == 3 
     ? "${project.version}.0" 
     : "${project.version}"
 
-// Launch4j EXE configuration
+// Portable .EXE Configuration
 launch4j {
     mainClassName = 'com.maple.launcher.RunLauncher'
     outputDir = 'launch4j'
@@ -69,23 +67,6 @@ launch4j {
     icon = "${projectDir}/icon.ico"
     companyName = 'Maplized (Hasanat)'
     copyright = 'Maplized (Hasanat)'
-    
-    // Proper Launch4j DSL properties for Windows file details
     version = winVersion
     textVersion = project.version.toString()
-}
-
-// Standalone installer configuration
-jpackage {
-    appName = 'MapleLauncher-Installer'
-    appVersion = project.version.toString()
-    vendor = 'Maplized (Hasanat)'
-    mainJar = 'MapleLauncher.jar'
-    mainClass = application.mainClass.get()
-    input = "${buildDir}/libs"
-    destination = "${buildDir}/dist"
-    type = 'EXE'
-    icon = "${projectDir}/icon.ico"
-    winMenu = true
-    winShortcut = true
 }
