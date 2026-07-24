@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: chmod +x gradlew
 
-      - name: Build Shadow JAR and Launch4j EXE
-        run: ./gradlew.bat shadowJar createExe --no-daemon
+      - name: Build Fat JAR and Launch4j EXE
+        run: ./gradlew.bat build createExe --no-daemon
 
       # Upload Artifacts
       - name: Upload Build Artifacts
