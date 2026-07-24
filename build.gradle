@@ -3,7 +3,6 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'edu.sc.seis.launch4j' version '4.0.0'
-    id 'com.gradleup.shadow' version '8.3.5'
 }
 
 group = 'com.maple'
@@ -29,27 +28,34 @@ dependencies {
 
 javafx {
     version = "21"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing', 'javafx.graphics' ]
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
 }
 
 application {
     mainClass = 'com.maple.launcher.RunLauncher'
 }
 
-shadowJar {
-    archiveBaseName = 'MapleLauncher'
-    archiveClassifier = ''
-    archiveVersion = '1.0'
+// Copy dependencies to build/libs/lib
+tasks.register('copyLibs', Copy) {
+    into "$buildDir/libs/lib"
+    from configurations.runtimeClasspath
+}
+
+jar {
+    dependsOn copyLibs
     manifest {
-        attributes 'Main-Class': application.mainClass.get()
+        attributes(
+            'Main-Class': application.mainClass.get(),
+            // Links external jars in the lib folder
+            'Class-Path': configurations.runtimeClasspath.files.collect { "lib/" + it.name }.join(' ')
+        )
     }
 }
 
 launch4j {
     mainClassName = 'com.maple.launcher.RunLauncher'
+    // Copy external runtime jars alongside the EXE
     copyConfigurable = []
-    // Direct Launch4j to wrap the bundled Shadow Jar
-    jarTask = project.tasks.shadowJar
     outputDir = 'launch4j'
     outfile = 'MapleLauncher.exe'
     headerType = 'gui'
