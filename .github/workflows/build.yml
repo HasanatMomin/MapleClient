@@ -29,14 +29,8 @@ jobs:
         run: |
           BUILD_NUM=${{ github.run_number }}
           
-          # Versioning Logic:
-          # Patch increments 0-9, then resets
           PATCH=$(( (BUILD_NUM - 1) % 10 ))
-          
-          # Minor increments every 10 builds (0-9), then resets
           MINOR=$(( ((BUILD_NUM - 1) / 10) % 10 ))
-          
-          # Major increments every 100 builds
           MAJOR=$(( 1 + ((BUILD_NUM - 1) / 100) ))
           
           VERSION="${MAJOR}.${MINOR}.${PATCH}"
@@ -50,6 +44,18 @@ jobs:
       - name: Build JAR and Launch4j EXE
         run: ./gradlew.bat build createExe --no-daemon
 
+      # Upload Artifacts (Downloadable from Actions summary)
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MapleLauncher-v${{ steps.semver.outputs.VERSION }}
+          path: |
+            build/libs/*.jar
+            build/launch4j/MapleLauncher.exe
+            Launch.bat
+          retention-days: 30
+
+      # Create Release on GitHub
       - name: Create Release & Upload Executables
         uses: softprops/action-gh-release@v2
         with:
@@ -60,5 +66,6 @@ jobs:
           files: |
             build/libs/*.jar
             build/launch4j/MapleLauncher.exe
+            Launch.bat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
