@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 
+// JavaFX setup - keeping only necessary modules for lightweight output
 javafx {
     version = "21"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
@@ -35,27 +36,19 @@ application {
     mainClass = 'com.maple.launcher.RunLauncher'
 }
 
-// Copy dependencies to build/libs/lib
-tasks.register('copyLibs', Copy) {
-    into "$buildDir/libs/lib"
-    from configurations.runtimeClasspath
-}
-
+// Built-in Gradle Fat JAR task (packages all runtime dependencies into the JAR)
 jar {
-    dependsOn copyLibs
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes(
-            'Main-Class': application.mainClass.get(),
-            // Links external jars in the lib folder
-            'Class-Path': configurations.runtimeClasspath.files.collect { "lib/" + it.name }.join(' ')
-        )
+        attributes 'Main-Class': application.mainClass.get()
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
 launch4j {
     mainClassName = 'com.maple.launcher.RunLauncher'
-    // Copy external runtime jars alongside the EXE
-    copyConfigurable = []
     outputDir = 'launch4j'
     outfile = 'MapleLauncher.exe'
     headerType = 'gui'
