@@ -41,7 +41,7 @@ jobs:
         shell: bash
         run: chmod +x gradlew
 
-      - name: Build Fat JAR and Portable EXE
+      - name: Build Fat JAR, Portable EXE, and Batch script
         run: ./gradlew.bat build createExe "-Pversion=${{ steps.semver.outputs.VERSION }}" --no-daemon
 
       # Upload Artifacts
@@ -52,11 +52,11 @@ jobs:
           path: |
             build/launch4j/MapleLauncher.exe
             build/libs/MapleLauncher.jar
-            Launch.bat
+            build/Launch.bat
           retention-days: 30
 
       # Create Release on GitHub
-      - name: Create Release & Upload Executable
+      - name: Create Release & Upload Files
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v${{ steps.semver.outputs.VERSION }}"
@@ -67,6 +67,6 @@ jobs:
           files: |
             build/launch4j/MapleLauncher.exe
             build/libs/MapleLauncher.jar
-            Launch.bat
+            build/Launch.bat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
