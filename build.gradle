@@ -46,6 +46,6 @@ launch4j {
     outputDir = 'launch4j'
     outfile = 'MapleLauncher.exe'
     headerType = 'gui'
-    bundledJre64Bit = true
+    requires64Bit = true
     jreMinVersion = '21'
 }
