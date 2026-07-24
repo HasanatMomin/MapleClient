@@ -5,7 +5,6 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
-# Grant the token permission to create releases and upload asset files
 permissions:
   contents: write
 
@@ -24,16 +23,42 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Build Shadow JAR & Launch4j EXE
-        run: ./gradlew.bat shadowJar createExe --no-daemon
+      - name: Calculate Dynamic SemVer Version
+        id: semver
+        shell: bash
+        run: |
+          BUILD_NUM=${{ github.run_number }}
+          
+          # Versioning Logic:
+          # Patch increments 0-9, then resets
+          PATCH=$(( (BUILD_NUM - 1) % 10 ))
+          
+          # Minor increments every 10 builds (0-9), then resets
+          MINOR=$(( ((BUILD_NUM - 1) / 10) % 10 ))
+          
+          # Major increments every 100 builds
+          MAJOR=$(( 1 + ((BUILD_NUM - 1) / 100) ))
+          
+          VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Calculated Version: ${VERSION}"
+          echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Grant Execute Permission for Gradle Wrapper
+        shell: bash
+        run: chmod +x gradlew
+
+      - name: Build JAR and Launch4j EXE
+        run: ./gradlew.bat build createExe --no-daemon
 
       - name: Create Release & Upload Executables
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v1.0-${{ github.run_number }}"
-          name: "MapleLauncher v1.0 (Build ${{ github.run_number }})"
+          tag_name: "v${{ steps.semver.outputs.VERSION }}"
+          name: "MapleLauncher v${{ steps.semver.outputs.VERSION }}"
+          draft: false
+          prerelease: false
           files: |
-            build/libs/MapleLauncher-1.0.jar
+            build/libs/*.jar
             build/launch4j/MapleLauncher.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
