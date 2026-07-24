@@ -7,7 +7,8 @@ plugins {
 }
 
 group = 'com.maple'
-version = '1.0'
+// Fallback version if not passed via command line
+version = project.hasProperty('version') && project.version != 'unspecified' ? project.version : '1.0.0'
 
 repositories {
     mavenCentral()
@@ -27,7 +28,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 
-// Essential JavaFX modules to keep the file size optimized
 javafx {
     version = "21"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
@@ -37,19 +37,28 @@ application {
     mainClass = 'com.maple.launcher.RunLauncher'
 }
 
-// Lightweight Runnable Fat JAR build (~7 MB)
+// Runnable Fat JAR build
 jar {
     archiveFileName = 'MapleLauncher.jar'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes 'Main-Class': application.mainClass.get()
+        attributes(
+            'Main-Class': application.mainClass.get(),
+            'Implementation-Vendor': 'Maplized (Hasanat)',
+            'Implementation-Version': project.version.toString()
+        )
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
-// Ultra-lightweight Launch4j EXE wrapper (~7 MB)
+// Helper to format semver (e.g., 1.0.1) into Windows 4-digit version (1.0.1.0) for Launch4j
+def winVersion = project.version.toString().contains('.') && project.version.toString().split('\\.').size() == 3 
+    ? "${project.version}.0" 
+    : "${project.version}"
+
+// Launch4j EXE configuration with dynamic Windows file details
 launch4j {
     mainClassName = 'com.maple.launcher.RunLauncher'
     outputDir = 'launch4j'
@@ -57,14 +66,22 @@ launch4j {
     headerType = 'gui'
     requires64Bit = true
     jreMinVersion = '21'
-    icon = "${projectDir}/icon.ico" // Expects icon.ico at project root
+    icon = "${projectDir}/icon.ico"
+    companyName = 'Maplized (Hasanat)'
+    copyright = 'Maplized (Hasanat)'
+    
+    // Dynamic versioning in Windows file properties
+    fileVersion = winVersion
+    productVersion = winVersion
+    txtFileVersion = project.version.toString()
+    txtProductVersion = project.version.toString()
 }
 
-// Standalone installer with embedded JRE
+// Standalone installer configuration with dynamic version
 jpackage {
     appName = 'MapleLauncher-Installer'
-    appVersion = '1.0.0'
-    vendor = 'Maple'
+    appVersion = project.version.toString()
+    vendor = 'Maplized (Hasanat)'
     mainJar = 'MapleLauncher.jar'
     mainClass = application.mainClass.get()
     input = "${buildDir}/libs"
