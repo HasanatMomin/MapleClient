@@ -51,7 +51,7 @@ jar {
     }
 }
 
-// 4-digit Windows version string (1.3.4.0)
+// 4-digit Windows version string (1.3.4.0) for Launch4j
 def winVersion = project.version.toString().contains('.') && project.version.toString().split('\\.').size() == 3 
     ? "${project.version}.0" 
     : "${project.version}"
@@ -70,3 +70,22 @@ launch4j {
     version = winVersion
     textVersion = project.version.toString()
 }
+
+// Automatically generate Launch.bat for releases
+tasks.register('generateLaunchBat') {
+    doLast {
+        def batFile = file("${buildDir}/Launch.bat")
+        batFile.text = """@echo off
+title MapleLauncher Debug Runner
+echo Starting MapleLauncher...
+java -jar MapleLauncher.jar
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ERROR] Launcher closed with code: %ERRORLEVEL%
+    pause
+)
+"""
+    }
+}
+
+build.finalizedBy(generateLaunchBat)
