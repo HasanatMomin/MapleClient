@@ -42,7 +42,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Fat JAR, Launch4j EXE, and jpackage Installer with Dynamic Version
-        run: ./gradlew.bat build createExe jpackage -Pversion=${{ steps.semver.outputs.VERSION }} --no-daemon
+        run: ./gradlew.bat build createExe jpackage "-Pversion=${{ steps.semver.outputs.VERSION }}" --no-daemon
 
       # Upload Artifacts
       - name: Upload Build Artifacts
