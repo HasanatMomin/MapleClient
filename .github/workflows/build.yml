@@ -1,4 +1,4 @@
-name: Build Standalone MapleLauncher Installer
+name: Build MapleLauncher Executable & Release
 
 on:
   push:
@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: chmod +x gradlew
 
-      - name: Build Fat JAR and jpackage Installer
-        run: ./gradlew.bat build jpackage --no-daemon
+      - name: Build Fat JAR, Launch4j EXE, and jpackage Installer
+        run: ./gradlew.bat build createExe jpackage --no-daemon
 
       # Upload Artifacts
       - name: Upload Build Artifacts
@@ -50,6 +50,8 @@ jobs:
         with:
           name: MapleLauncher-v${{ steps.semver.outputs.VERSION }}
           path: |
+            build/libs/MapleLauncher.jar
+            build/launch4j/MapleLauncher.exe
             build/dist/*.exe
             Launch.bat
           retention-days: 30
@@ -63,6 +65,8 @@ jobs:
           draft: false
           prerelease: false
           files: |
+            build/libs/MapleLauncher.jar
+            build/launch4j/MapleLauncher.exe
             build/dist/*.exe
             Launch.bat
         env:
