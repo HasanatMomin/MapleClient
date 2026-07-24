@@ -41,10 +41,10 @@ jobs:
         shell: bash
         run: chmod +x gradlew
 
-      - name: Build JAR and Launch4j EXE
-        run: ./gradlew.bat build createExe --no-daemon
+      - name: Build Shadow JAR and Launch4j EXE
+        run: ./gradlew.bat shadowJar createExe --no-daemon
 
-      # Upload Artifacts (Downloadable from Actions summary)
+      # Upload Artifacts
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
