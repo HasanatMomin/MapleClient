@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'edu.sc.seis.launch4j' version '3.0.5'
 }
 
 group = 'com.maple'
@@ -38,4 +39,13 @@ jar {
     manifest {
         attributes 'Main-Class': application.mainClass.get()
     }
+}
+
+launch4j {
+    mainClassName = 'com.maple.launcher.RunLauncher'
+    outputDir = 'launch4j'
+    outfile = 'MapleLauncher.exe'
+    headerType = 'gui'
+    bundledJre64Bit = true
+    jreMinVersion = '21'
 }
