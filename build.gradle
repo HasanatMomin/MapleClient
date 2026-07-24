@@ -3,6 +3,7 @@ plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'edu.sc.seis.launch4j' version '4.0.0'
+    id 'com.gradleup.shadow' version '8.3.5'
 }
 
 group = 'com.maple'
@@ -35,7 +36,10 @@ application {
     mainClass = 'com.maple.launcher.RunLauncher'
 }
 
-jar {
+shadowJar {
+    archiveBaseName = 'MapleLauncher'
+    archiveClassifier = ''
+    archiveVersion = '1.0'
     manifest {
         attributes 'Main-Class': application.mainClass.get()
     }
@@ -43,6 +47,9 @@ jar {
 
 launch4j {
     mainClassName = 'com.maple.launcher.RunLauncher'
+    copyConfigurable = []
+    // Direct Launch4j to wrap the bundled Shadow Jar
+    jarTask = project.tasks.shadowJar
     outputDir = 'launch4j'
     outfile = 'MapleLauncher.exe'
     headerType = 'gui'
